@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+    {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
+
+    {% block javascripts %}
+        {{ encore_entry_script_tags('app') }}
+    {% endblock %}
+</head>
+<body>
+<div class="container sticky-top">
+    <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom bg-light">
+        <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+            <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"/></svg>
+            <span class="fs-4">ToDo Aplication</span>
+        </a>
+
+        <ul class="nav nav-pills">
+            <li class="nav-item"><a href="#" class="nav-link" aria-current="page">Dashboard</a></li>
+            <li class="nav-item"><a href="#" class="nav-link">Create ToDo List</a></li>
+            <li class="nav-item"><a href="#" class="nav-link">Create task</a></li>
+            <li class="nav-item"><a href="#" class="nav-link">Log out</a></li>
+        </ul>
+    </header>
+</div>
+
+{% block body %}{% endblock %}
+</body>
+</html>
