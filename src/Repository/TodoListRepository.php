@@ -39,6 +39,14 @@ class TodoListRepository extends ServiceEntityRepository
         }
     }
 
+    public function orderBySelectedValue(string $val): array
+    {
+        $qb = $this->createQueryBuilder('lists');
+        $qb->orderBy('lists.'.$val, 'ASC');
+
+        return $qb->getQuery()->getResult();
+    }
+
 //    /**
 //     * @return TodoList[] Returns an array of TodoList objects
 //     */

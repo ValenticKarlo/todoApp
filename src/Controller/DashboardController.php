@@ -13,7 +13,7 @@ class DashboardController extends AbstractController
     public function dashboard(TodoListRepository $listRepository): Response
     {
         $orderBy = !empty($_POST['orderBy']) ? $_POST['orderBy'] : 'name';
-        $lists = $listRepository->findAll();
+        $lists = $listRepository->orderBySelectedValue($orderBy);
 
         return $this->render('todoApp/dashboard.html.twig',[
             'lists'=>$lists,

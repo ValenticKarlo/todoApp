@@ -4,15 +4,15 @@
     <section class="py-5 text-center container ">
         <div class="row py-md-0">
             <div class="col-lg-10 col-md-8 mx-auto">
-                <h1 class="fw-light"></h1>
+                <h1 class="fw-light">{{ list.name }}</h1>
                 <p class="lead text-muted">
-                    Creation date:  |
+                    Creation date: {{ list.createdAt|date('d.m.Y')}} |
                     Total number of tasks: {{ tasks|length }} |
                     Number of unfinished tasks:  |
                     Completed tasks: %
                 </p>
                 <p class="lead text-muted">Order by:
-                <form method="post" action="{{ path('app_show_tasks') }}" >
+                <form method="post" action="{{ path('app_show_tasks',{listId: list.id}) }}" >
                     <div class="d-inline-flex gap-2 justify-content-center">
                         <select name="orderBy" required class=" dropdown-menu position-static d-grid gap-1 p-2 rounded mx-0 shadow w-220px">
                             <option {% if orderBy == 'task' %}selected{% endif %} class="dropdown-item rounded-2" value="task">Name</option>
@@ -43,13 +43,13 @@
                                     <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
                                     <button type="button" class="btn btn-sm btn-outline-secondary" >
                                         <a class="text-decoration-none text-danger"
-                                           href="{{ path('app_task_delete',{taskId: task.id}) }}">Delete
+                                           href="{{ path('app_task_delete',{taskId: task.id, listId: list.id}) }}">Delete
                                         </a>
                                     </button>
                                     {% if(task.status == false) %}
                                     <button type="button" class="btn btn-sm btn-outline-secondary" >
                                         <a class="text-decoration-none text-primary"
-                                           href="{{ path('app_complete_task', {taskId: task.id}) }}">Complete task
+                                           href="{{ path('app_complete_task', {taskId: task.id, listId: list.id}) }}">Complete task
                                         </a>
                                     </button>
                                     {% endif %}
