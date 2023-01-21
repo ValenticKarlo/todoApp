@@ -29,7 +29,7 @@ class TaskController extends AbstractController
         $task = $taskRepository->findOneBy(['id'=>$taskId]);
         if(is_null($taskId))
         {
-            $this->createNotFoundException('No task with id: '. $taskId);
+            throw $this->createNotFoundException('No task with id: '. $taskId);
         }
 
         $taskRepository->remove($task, true);
@@ -43,7 +43,7 @@ class TaskController extends AbstractController
         $task = $taskRepository->findOneBy(['id'=>$taskId]);
         if(is_null($taskId))
         {
-            $this->createNotFoundException('No task with id: '. $taskId);
+            throw $this->createNotFoundException('No task with id: '. $taskId);
         }
         $taskRepository->completeTask($task, true);
 

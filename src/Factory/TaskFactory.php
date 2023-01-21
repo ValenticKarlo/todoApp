@@ -50,7 +50,7 @@ final class TaskFactory extends ModelFactory
             'deadline' => self::faker()->dateTimeBetween('-100 days', '+ 100 days'),
             'priority' => self::faker()->numberBetween(1, 3),
             'status' => self::faker()->boolean(),
-            'task' => self::faker()->sentence(4),
+            'task' => self::faker()->sentence(4, true),
         ];
     }
 

@@ -26,6 +26,10 @@ class Task
     #[ORM\Column]
     private ?bool $status = null;
 
+    #[ORM\ManyToOne(inversedBy: 'tasks')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?TodoList $todoList = null;
+
 
     public function getId(): ?int
     {
@@ -76,6 +80,18 @@ class Task
     public function setStatus(bool $status): self
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getTodoList(): ?TodoList
+    {
+        return $this->todoList;
+    }
+
+    public function setTodoList(?TodoList $todoList): self
+    {
+        $this->todoList = $todoList;
 
         return $this;
     }

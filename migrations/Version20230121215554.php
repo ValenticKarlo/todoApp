@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20230121212552 extends AbstractMigration
+final class Version20230121215554 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -20,12 +20,12 @@ final class Version20230121212552 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE task DROP list_id_id');
+        $this->addSql('ALTER TABLE todo_list ADD created_at DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\', CHANGE total_tasks total_tasks INT DEFAULT NULL');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE task ADD list_id_id INT NOT NULL');
+        $this->addSql('ALTER TABLE todo_list DROP created_at, CHANGE total_tasks total_tasks INT NOT NULL');
     }
 }

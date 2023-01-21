@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\ListEntityRepository;
+use App\Repository\TodoListRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: ListEntityRepository::class)]
-class ListEntity
+#[ORM\Entity(repositoryClass: TodoListRepository::class)]
+class TodoList
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -18,19 +18,22 @@ class ListEntity
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?int $totalTasks = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?int $completedTasks = null;
+
+    #[ORM\OneToMany(mappedBy: 'todoList', targetEntity: Task::class, orphanRemoval: true)]
+    private Collection $tasks;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
-
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable('now');
+        $this->tasks = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -55,7 +58,7 @@ class ListEntity
         return $this->totalTasks;
     }
 
-    public function setTotalTasks(int $totalTasks): self
+    public function setTotalTasks(?int $totalTasks): self
     {
         $this->totalTasks = $totalTasks;
 
@@ -67,9 +70,39 @@ class ListEntity
         return $this->completedTasks;
     }
 
-    public function setCompletedTasks(int $completedTasks): self
+    public function setCompletedTasks(?int $completedTasks): self
     {
         $this->completedTasks = $completedTasks;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Task>
+     */
+    public function getTasks(): Collection
+    {
+        return $this->tasks;
+    }
+
+    public function addTask(Task $task): self
+    {
+        if (!$this->tasks->contains($task)) {
+            $this->tasks->add($task);
+            $task->setTodoList($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTask(Task $task): self
+    {
+        if ($this->tasks->removeElement($task)) {
+            // set the owning side to null (unless already changed)
+            if ($task->getTodoList() === $this) {
+                $task->setTodoList(null);
+            }
+        }
 
         return $this;
     }
@@ -85,5 +118,4 @@ class ListEntity
 
         return $this;
     }
-
 }

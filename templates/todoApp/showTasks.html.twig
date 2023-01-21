@@ -16,7 +16,7 @@
                     <div class="d-inline-flex gap-2 justify-content-center">
                         <select name="orderBy" required class=" dropdown-menu position-static d-grid gap-1 p-2 rounded mx-0 shadow w-220px">
                             <option {% if orderBy == 'task' %}selected{% endif %} class="dropdown-item rounded-2" value="task">Name</option>
-                            <option {% if orderBy == 'deadline' %}selected{% endif %} class="dropdown-item rounded-2" value="deadline">Finishing date</option>
+                            <option {% if orderBy == 'deadline' %}selected{% endif %} class="dropdown-item rounded-2" value="deadline">Deadline</option>
                             <option {% if orderBy == 'status' %}selected{% endif %} class="dropdown-item rounded-2" value="status">Status</option>
                             <option {% if orderBy == 'priority' %}selected{% endif %} class="dropdown-item rounded-2" value="priority">Priority</option>
                         </select>

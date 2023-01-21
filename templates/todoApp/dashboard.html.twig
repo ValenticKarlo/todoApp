@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard{% endblock %}
+
+
+{% block body %}
+
+    <section class="py-5 text-center container" xmlns="http://www.w3.org/1999/html">
+        <div class="row py-md-0">
+            <div class="col-lg-6 col-md-8 mx-auto">
+                <h1 class="fw-light">Lists:</h1>
+                <p class="lead text-muted">Total number of lists: {{ lists|length }}</p>
+                <p>
+                <form method="post" action="{{ path('app_dashboard') }}" >
+                    <div class="d-inline-flex gap-2 justify-content-center">
+                        <select name="orderBy" required class=" dropdown-menu position-static d-grid gap-1 p-2 rounded mx-0 shadow w-220px">
+                            <option {% if orderBy == 'name' %}selected{% endif %} class="dropdown-item rounded-2" value="name">Name</option>
+                            <option {% if orderBy == 'createdAt' %}selected{% endif %} class="dropdown-item rounded-2" value="createdAt">Date</option>
+                        </select>
+                        <input type="submit" class=" btn btn-sm btn-secondary position-static d-grid gap-1  rounded" value="Submit">
+                    </div>
+                </form>
+                </p>
+            </div>
+        </div>
+    </section>
+    <div class="album py-5 bg-light">
+        <div class="container">
+            <div class="row row-cols-1 ">
+                {% for list in lists %}
+                    <div class="col">
+                        <div class="card shadow-sm ">
+                            <div class="card-body">
+                                <p class="card-title">{{ list.name }} |
+                                    <small class="text-muted">
+                                        Number of tasks: {{ list.tasks|length }}
+                                    </small>
+                                </p>
+                                <small class="card-text text-muted"></small>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="btn-group">
+                                        <a type="btn"
+                                           class="stretched-link btn btn-sm btn-outline-secondary"
+                                           href="#"
+                                        >View List</a>
+                                        <a type="btn"
+                                           class="stretched-link btn btn-sm btn-outline-secondary text-danger"
+                                           href="#"
+                                        >Delete list</a>
+                                    </div>
+                                    <small class="text-muted">Creation date: {{ list.createdAt|date("d/m/Y") }} </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
