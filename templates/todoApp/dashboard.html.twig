@@ -45,7 +45,7 @@
                                         >View List</a>
                                         <a type="btn"
                                            class="stretched-link btn btn-sm btn-outline-secondary text-danger"
-                                           href="#"
+                                           href="{{ path('app_delete_list',{listId: list.id}) }}"
                                         >Delete list</a>
                                     </div>
                                     <small class="text-muted">Creation date: {{ list.createdAt|date("d/m/Y") }} </small>

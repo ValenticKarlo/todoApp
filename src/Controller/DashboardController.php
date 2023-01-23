@@ -24,6 +24,18 @@ class DashboardController extends AbstractController
         ]);
     }
 
+    #[Route('//delete-list/{listId}', name: 'app_delete_list')]
+    public function deleteList($listId, TodoListRepository $listRepository): Response
+    {
+        $list = $listRepository->findOneBy(['id'=>$listId]);
+        if(is_null($listId))
+        {
+            throw $this->createNotFoundException('No list with Id: '.$listId);
+        }
+        $listRepository->remove($list, true);
+        return $this->redirectToRoute('app_dashboard');
+    }
+
     #[Route('/create-todolist', name: 'app_create_todoList')]
     public function createTodoList(Request $request, TodoListRepository $listRepository): Response
     {
@@ -34,7 +46,6 @@ class DashboardController extends AbstractController
         if($form->isSubmitted() && $form->isValid()){
 
             $todoList = $form->getData();
-
             $listRepository->save($todoList, true);
             return $this->redirectToRoute('app_dashboard');
         }
