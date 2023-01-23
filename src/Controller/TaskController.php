@@ -21,6 +21,8 @@ class TaskController extends AbstractController
         $list = $listRepository->findOneBy(['id'=>$listId]);
         if(is_null($listId)){ throw $this->createNotFoundException('No list of tasks wit id: '. $listId);}
         $tasks = $taskRepository->orderBySelectedValue($orderBy, $listId);
+
+
         //dd($tasks);
         return $this->render('todoApp/showTasks.html.twig',[
             'tasks'=>$tasks,
@@ -29,6 +31,23 @@ class TaskController extends AbstractController
         ]);
     }
 
+    #[Route('/edit_task/{listId}/{taskId}', name:'app_edit_task')]
+    public function editTask($listId, $taskId, TaskRepository $taskRepository, Request $request): Response
+    {
+        $task = $taskRepository->findOneBy(['id'=>$taskId]);
+        $form = $this->createForm(TaskType::class, $task);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid())
+        {
+            $task = $form->getData();
+            $taskRepository->save($task, true);
+            return $this->redirectToRoute('app_show_tasks', ['listId'=>$listId]);
+        }
+
+        return $this->render('forms/createTask.html.twig', [
+            'form' => $form
+        ]);
+    }
 
     #[Route('/create_task', name: 'app_task_create')]
     public function createTask(Request $request, TaskRepository $taskRepository): Response
