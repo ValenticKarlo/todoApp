@@ -31,7 +31,7 @@ class TaskController extends AbstractController
         ]);
     }
 
-    #[Route('/edit_task/{listId}/{taskId}', name:'app_edit_task')]
+    #[Route('/dashboard/edit_task/{listId}/{taskId}', name:'app_edit_task')]
     public function editTask($listId, $taskId, TaskRepository $taskRepository, Request $request): Response
     {
         $task = $taskRepository->findOneBy(['id'=>$taskId]);
@@ -49,7 +49,7 @@ class TaskController extends AbstractController
         ]);
     }
 
-    #[Route('/create_task', name: 'app_task_create')]
+    #[Route('/dashboard/create_task', name: 'app_task_create')]
     public function createTask(Request $request, TaskRepository $taskRepository): Response
     {
         $task = new Task();
@@ -68,7 +68,7 @@ class TaskController extends AbstractController
 
     }
 
-    #[Route('/delete-task/{taskId<\d+>}/{listId<\d+>}', name: 'app_task_delete')]
+    #[Route('/dashboard/delete-task/{taskId<\d+>}/{listId<\d+>}', name: 'app_task_delete')]
     public function deleteTask($taskId, $listId, TaskRepository $taskRepository ):Response
     {
         $task = $taskRepository->findOneBy(['id'=>$taskId]);
@@ -82,7 +82,7 @@ class TaskController extends AbstractController
         return $this->redirectToRoute('app_show_tasks',['listId'=>$listId]);
     }
 
-    #[Route('/complete-task/{taskId<\d+>}/{listId<\d+>}', name: 'app_complete_task')]
+    #[Route('/dashboard/complete-task/{taskId<\d+>}/{listId<\d+>}', name: 'app_complete_task')]
     public function completeTask($taskId, $listId, TaskRepository $taskRepository): Response
     {
         $task = $taskRepository->findOneBy(['id'=>$taskId]);
