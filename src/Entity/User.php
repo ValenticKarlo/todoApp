@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -42,12 +44,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?bool $status = null;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: TodoList::class, orphanRemoval: true)]
+    private Collection $todoLists;
+
 
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable('now');
         $this->lastLogin = new \DateTimeImmutable('now');
         $this->status = false;
+        $this->todoLists = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -176,6 +182,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setStatus(bool $status): self
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TodoList>
+     */
+    public function getTodoLists(): Collection
+    {
+        return $this->todoLists;
+    }
+
+    public function addTodoList(TodoList $todoList): self
+    {
+        if (!$this->todoLists->contains($todoList)) {
+            $this->todoLists->add($todoList);
+            $todoList->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTodoList(TodoList $todoList): self
+    {
+        if ($this->todoLists->removeElement($todoList)) {
+            // set the owning side to null (unless already changed)
+            if ($todoList->getUser() === $this) {
+                $todoList->setUser(null);
+            }
+        }
 
         return $this;
     }

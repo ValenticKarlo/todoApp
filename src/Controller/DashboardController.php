@@ -9,14 +9,20 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class DashboardController extends AbstractController
 {
     #[Route('/dashboard', name: 'app_dashboard')]
-    public function dashboard(TodoListRepository $listRepository): Response
+    public function dashboard(TodoListRepository $listRepository, UserInterface $user): Response
     {
         $orderBy = !empty($_POST['orderBy']) ? $_POST['orderBy'] : 'name';
-        $lists = $listRepository->orderBySelectedValue($orderBy);
+        $user = $this->getUser();
+        if (is_null($user))
+        {
+            throw $this->createNotFoundException('No user logged in.');
+        }
+        $lists = $listRepository->orderBySelectedValue($orderBy, $user);
 
         return $this->render('todoApp/dashboard.html.twig',[
             'lists'=>$lists,
@@ -46,6 +52,7 @@ class DashboardController extends AbstractController
         if($form->isSubmitted() && $form->isValid()){
 
             $todoList = $form->getData();
+            $todoList->setUser($this->getUser());
             $listRepository->save($todoList, true);
             return $this->redirectToRoute('app_dashboard');
         }
