@@ -24,7 +24,7 @@ class DashboardController extends AbstractController
         ]);
     }
 
-    #[Route('//delete-list/{listId}', name: 'app_delete_list')]
+    #[Route('/delete-list/{listId}', name: 'app_delete_list')]
     public function deleteList($listId, TodoListRepository $listRepository): Response
     {
         $list = $listRepository->findOneBy(['id'=>$listId]);

@@ -1,12 +1,15 @@
-{% extends 'base.html.twig' %}
-{% block title %}Create list{% endblock %}
+{% extends ('base.html.twig') %}
+
+{% block title %}Create Task{% endblock %}
 
 {% block body %}
     <div class="container">
-        <h3>Create lists of tasks:</h3>
+        <h3>Create a tasks:</h3>
         {{ form_start(form) }}
             {{ form_widget(form) }}
             <button type="submit" class=" btn btn-sm btn-secondary position-static d-grid gap-1  rounded">Submit</button>
         {{ form_end(form) }}
     </div>
+
+
 {% endblock %}

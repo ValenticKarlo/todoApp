@@ -19,12 +19,12 @@ class TodoList
     private ?string $name = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $totalTasks = null;
+    private ?int $totalTasks = 0;
 
     #[ORM\Column(nullable: true)]
-    private ?int $completedTasks = null;
+    private ?int $completedTasks = 0;
 
-    #[ORM\OneToMany(mappedBy: 'todoList', targetEntity: Task::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'todoList', targetEntity: Task::class, fetch: 'EXTRA_LAZY', orphanRemoval: true, )]
     private Collection $tasks;
 
     #[ORM\Column]
@@ -58,8 +58,9 @@ class TodoList
         return $this->totalTasks;
     }
 
-    public function setTotalTasks(?int $totalTasks): self
+    public function setTotalTasks(): self
     {
+        $totalTasks = count($this->tasks);
         $this->totalTasks = $totalTasks;
 
         return $this;
@@ -70,7 +71,7 @@ class TodoList
         return $this->completedTasks;
     }
 
-    public function setCompletedTasks(?int $completedTasks): self
+    public function setCompletedTasks(int $completedTasks): self
     {
         $this->completedTasks = $completedTasks;
 

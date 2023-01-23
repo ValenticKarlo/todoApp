@@ -13,8 +13,8 @@ class TodoListType extends AbstractType
     {
         $builder
             ->add('name')
-            ->add('totalTasks')
-            ->add('completedTasks')
+ //           ->add('totalTasks')
+//            ->add('completedTasks')
 //            ->add('createdAt')
         ;
     }

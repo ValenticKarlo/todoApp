@@ -14,11 +14,11 @@ class AppFixtures extends Fixture
         TodoListFactory::new()->createMany(10);
 
 
-          TaskFactory::new()->createMany(20, function (){
+        TaskFactory::new()->createMany(20, function (){
               return [
                   'todoList'=>TodoListFactory::random(),
               ];
-          });
+        });
         // $product = new Product();
         // $manager->persist($product);
 
