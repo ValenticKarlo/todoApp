@@ -2,8 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\TodoList;
+use App\Form\TodoListType;
 use App\Repository\TodoListRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -19,5 +22,26 @@ class DashboardController extends AbstractController
             'lists'=>$lists,
             'orderBy'=>$orderBy
         ]);
+    }
+
+    #[Route('/create-todolist', name: 'app_create_todoList')]
+    public function createTodoList(Request $request, TodoListRepository $listRepository): Response
+    {
+        $todoList = new TodoList();
+        $form = $this->createForm(TodoListType::class, $todoList);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+
+            $todoList = $form->getData();
+
+            $listRepository->save($todoList, true);
+            return $this->redirectToRoute('app_dashboard');
+        }
+
+        return $this->render('forms/createTodoList.html.twig', [
+            'form' => $form,
+        ]);
+
     }
 }
