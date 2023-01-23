@@ -167,8 +167,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->lastLogin;
     }
 
-    public function setLastLogin(\DateTimeImmutable $lastLogin): self
+    public function setLastLogin(): self
     {
+        $lastLogin = new \DateTimeImmutable('now');
         $this->lastLogin = $lastLogin;
 
         return $this;
