@@ -39,12 +39,16 @@ class TodoListRepository extends ServiceEntityRepository
         }
     }
 
-    public function orderBySelectedValue(string $val, $userId): array
+    public function orderBySelectedValue(string $val, $userId, $search): array
     {
         $qb = $this->createQueryBuilder('lists');
         $qb ->andWhere('lists.user = :userId')
             ->setParameter('userId', $userId)
             ->orderBy('lists.'.$val, 'ASC');
+        if ($search) {
+            $qb->andWhere('lower(lists.name) LIKE :searchTerm')
+                ->setParameter('searchTerm', '%'.strtolower($search).'%');
+        }
 
         return $qb->getQuery()->getResult();
     }

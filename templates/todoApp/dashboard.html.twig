@@ -17,6 +17,10 @@
                             <option {% if orderBy == 'name' %}selected{% endif %} class="dropdown-item rounded-2" value="name">Name</option>
                             <option {% if orderBy == 'createdAt' %}selected{% endif %} class="dropdown-item rounded-2" value="createdAt">Date</option>
                         </select>
+                        <input name="searchTerm"
+                               type="text"
+                               class="position-static d-grid gap-1  rounded"
+                               placeholder="{% if searchTerm != null %}{{ searchTerm }}{% else %}Search Lists{% endif %}">
                         <input type="submit" class=" btn btn-sm btn-secondary position-static d-grid gap-1  rounded" value="Submit">
                     </div>
                 </form>

@@ -16,17 +16,19 @@ class DashboardController extends AbstractController
     #[Route('/dashboard', name: 'app_dashboard')]
     public function dashboard(TodoListRepository $listRepository, UserInterface $user): Response
     {
+        $searchTerm = !empty($_POST['searchTerm']) ? $_POST['searchTerm'] : null;
         $orderBy = !empty($_POST['orderBy']) ? $_POST['orderBy'] : 'name';
         $user = $this->getUser();
         if (is_null($user))
         {
             throw $this->createNotFoundException('No user logged in.');
         }
-        $lists = $listRepository->orderBySelectedValue($orderBy, $user);
+        $lists = $listRepository->orderBySelectedValue($orderBy, $user, $searchTerm);
 
         return $this->render('todoApp/dashboard.html.twig',[
             'lists'=>$lists,
-            'orderBy'=>$orderBy
+            'orderBy'=>$orderBy,
+            'searchTerm'=>$searchTerm
         ]);
     }
 
