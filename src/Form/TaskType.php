@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Task;
 use App\Entity\TodoList;
+use App\Repository\TodoListRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -49,6 +50,7 @@ class TaskType extends AbstractType
             ])
             ->add('todoList', EntityType::class, [
                'class'=> TodoList::class,
+                'choices'=>$options['listRepo'],
                 'choice_label'=> 'name'
             ])
         ;
@@ -58,6 +60,8 @@ class TaskType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Task::class,
+            'listRepo' => array()
         ]);
+        $resolver->setAllowedTypes('listRepo', ['array', 'null']);
     }
 }

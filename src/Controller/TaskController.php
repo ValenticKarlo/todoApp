@@ -11,12 +11,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class TaskController extends AbstractController
 {
     #[Route('/dashboard/{listId<\d+>}', name: 'app_show_tasks')]
     public function show($listId, TaskRepository $taskRepository, TodoListRepository $listRepository):Response
     {
+
         $orderBy = !empty($_POST['orderBy']) ? $_POST['orderBy'] : 'task';
         $list = $listRepository->findOneBy(['id'=>$listId]);
         if(is_null($listId)){ throw $this->createNotFoundException('No list of tasks wit id: '. $listId);}
@@ -32,10 +34,16 @@ class TaskController extends AbstractController
     }
 
     #[Route('/dashboard/edit_task/{listId}/{taskId}', name:'app_edit_task')]
-    public function editTask($listId, $taskId, TaskRepository $taskRepository, Request $request): Response
+    public function editTask($listId, $taskId, TaskRepository $taskRepository, Request $request, TodoListRepository $listRepository ): Response
     {
+        $user = $this->getUser();
+        if (is_null($user))
+        {
+            throw $this->createNotFoundException('No user logged in.');
+        }
+        $list = $listRepository->findBy(['user'=>$user]);
         $task = $taskRepository->findOneBy(['id'=>$taskId]);
-        $form = $this->createForm(TaskType::class, $task);
+        $form = $this->createForm(TaskType::class, $task, ['listRepo'=>$list]);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid())
         {
@@ -50,10 +58,17 @@ class TaskController extends AbstractController
     }
 
     #[Route('/dashboard/create_task', name: 'app_task_create')]
-    public function createTask(Request $request, TaskRepository $taskRepository): Response
+    public function createTask(Request $request, TaskRepository $taskRepository, TodoListRepository $listRepository): Response
     {
+        $user = $this->getUser();
+        if (is_null($user))
+        {
+            throw $this->createNotFoundException('No user logged in.');
+        }
+        $list = $listRepository->findBy(['user'=>$user]);
         $task = new Task();
-        $form = $this->createForm(TaskType::class, $task);
+
+        $form = $this->createForm(TaskType::class, $task, ['listRepo'=>$list]);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid())
         {

@@ -35,6 +35,16 @@
         {% endif %}
     </header>
 </div>
+<div class="container">
+    {% for flash in app.flashes('success') %}
+        <div class="alert alert-success">{{ flash }}</div>
+    {% endfor %}
+</div>
+<div class="container">
+    {% for flash in app.flashes('error') %}
+        <div class="alert alert-danger">{{ flash }}</div>
+    {% endfor %}
+</div>
 
 {% block body %}{% endblock %}
 </body>

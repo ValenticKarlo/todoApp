@@ -42,7 +42,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?\DateTimeImmutable $lastLogin = null;
 
     #[ORM\Column]
-    private ?bool $status = null;
+    private bool $status = false;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: TodoList::class, orphanRemoval: true)]
     private Collection $todoLists;
@@ -175,7 +175,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function isStatus(): ?bool
+    public function isStatus(): bool
     {
         return $this->status;
     }
