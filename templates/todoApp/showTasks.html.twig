@@ -7,7 +7,7 @@
                 <h1 class="fw-light">{{ list.name }}</h1>
                 <p class="lead text-muted">
                     Creation date: {{ list.createdAt|date('d.m.Y')}} |
-                    Total number of tasks: {{ tasks|length }} |
+                    Total number of tasks: {{ list.totalTasks }} |
                     Number of unfinished tasks: {{ list.totalTasks - list.completedTasks }} |
                     {% if list.totalTasks != 0 %}
                     Completed tasks: {{ ((list.completedTasks/list.totalTasks)*100)|number_format(0,'.', ',') }}%  %

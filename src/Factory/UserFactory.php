@@ -30,14 +30,18 @@ use Zenstruck\Foundry\RepositoryProxy;
  */
 final class UserFactory extends ModelFactory
 {
+    private UserPasswordHasherInterface $userPasswordHasher;
+
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services
      *
      * @todo inject services if required
      */
-    public function __construct()
+    public function __construct(UserPasswordHasherInterface $userPasswordHasher)
     {
         parent::__construct();
+
+        $this->userPasswordHasher = $userPasswordHasher;
     }
 
     /**
@@ -50,9 +54,9 @@ final class UserFactory extends ModelFactory
         return [
             'createdAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
             'email' => self::faker()->email(),
-            'lastLogin' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
+            //'lastLogin' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
             'name' => self::faker()->name(),
-            'password' => self::faker()->password(2,10),
+            'password' => 'admin',
             'roles' => [],
             'status' => self::faker()->boolean(),
             'surname' => self::faker()->lastName(),
@@ -65,7 +69,11 @@ final class UserFactory extends ModelFactory
     protected function initialize(): self
     {
         return $this
-            // ->afterInstantiate(function(User $user): void {})
+            ->afterInstantiate(function(User $user) {
+                if($user->getPassword()){
+                    $user->setPassword($this->userPasswordHasher->hashPassword($user, $user->getPassword()));
+                }
+            })
         ;
     }
 
