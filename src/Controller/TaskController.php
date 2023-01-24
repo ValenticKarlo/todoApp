@@ -18,18 +18,18 @@ class TaskController extends AbstractController
     #[Route('/dashboard/{listId<\d+>}', name: 'app_show_tasks')]
     public function show($listId, TaskRepository $taskRepository, TodoListRepository $listRepository):Response
     {
-
+        $searchTerm = !empty($_POST['searchTerm']) ? $_POST['searchTerm'] : null;
         $orderBy = !empty($_POST['orderBy']) ? $_POST['orderBy'] : 'task';
         $list = $listRepository->findOneBy(['id'=>$listId]);
         if(is_null($listId)){ throw $this->createNotFoundException('No list of tasks wit id: '. $listId);}
-        $tasks = $taskRepository->orderBySelectedValue($orderBy, $listId);
-
+        $tasks = $taskRepository->orderBySelectedValue($orderBy, $listId, $searchTerm);
 
         //dd($tasks);
         return $this->render('todoApp/showTasks.html.twig',[
             'tasks'=>$tasks,
             'orderBy'=>$orderBy,
             'list'=>$list,
+            'searchTerm'=>$searchTerm
         ]);
     }
 

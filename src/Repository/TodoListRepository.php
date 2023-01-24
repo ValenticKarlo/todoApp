@@ -45,7 +45,7 @@ class TodoListRepository extends ServiceEntityRepository
         $qb ->andWhere('lists.user = :userId')
             ->setParameter('userId', $userId)
             ->orderBy('lists.'.$val, 'ASC');
-        if ($search) {
+        if (!is_null($search)) {
             $qb->andWhere('lower(lists.name) LIKE :searchTerm')
                 ->setParameter('searchTerm', '%'.strtolower($search).'%');
         }

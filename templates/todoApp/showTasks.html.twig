@@ -10,7 +10,7 @@
                     Total number of tasks: {{ list.totalTasks }} |
                     Number of unfinished tasks: {{ list.totalTasks - list.completedTasks }} |
                     {% if list.totalTasks != 0 %}
-                    Completed tasks: {{ ((list.completedTasks/list.totalTasks)*100)|number_format(0,'.', ',') }}%  %
+                    Completed tasks: {{ ((list.completedTasks/list.totalTasks)*100)|number_format(0,'.', ',') }}%
                     {% else %}
                     Completed tasks: 0%
                     {% endif %}
@@ -24,6 +24,10 @@
                             <option {% if orderBy == 'status' %}selected{% endif %} class="dropdown-item rounded-2" value="status">Status</option>
                             <option {% if orderBy == 'priority' %}selected{% endif %} class="dropdown-item rounded-2" value="priority">Priority</option>
                         </select>
+                        <input name="searchTerm"
+                               type="text"
+                               class="position-static d-grid gap-1  rounded"
+                               placeholder="{% if searchTerm != null %}{{ searchTerm }}{% else %}Search Lists{% endif %}">
                         <input type="submit" class=" btn btn-sm btn-secondary position-static d-grid gap-1  rounded" value="Submit">
                     </div>
                 </form>
