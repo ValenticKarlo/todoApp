@@ -49,17 +49,24 @@ class TaskRepository extends ServiceEntityRepository
         }
     }
 
-    public function orderBySelectedValue(string $val, int $listId, $search): array
+    public function orderAndSearchByParameters(string $val, int $listId, string $direction, $search): array
     {
         $qb = $this->createQueryBuilder('tasks');
         $qb ->andWhere('tasks.todoList = :listId')
-            ->setParameter('listId', $listId)
-            ->orderBy('tasks.'.$val, 'ASC');
-        if (!is_null($search)) {
+            ->setParameter('listId', $listId);
+        if( $direction == 'ASC')
+        {
+            $qb->orderBy('tasks.'.$val, 'ASC');
+        }
+        else
+        {
+            $qb->orderBy('tasks.'.$val, 'DESC');
+        }
+        if (!($search === null))
+        {
             $qb->andWhere('lower(tasks.task) LIKE :searchTerm')
                 ->setParameter('searchTerm', '%'.strtolower($search).'%');
         }
-
         return $qb->getQuery()->getResult();
     }
 

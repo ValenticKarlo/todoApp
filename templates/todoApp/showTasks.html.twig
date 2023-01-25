@@ -16,14 +16,22 @@
                     {% endif %}
                 </p>
                 <p class="lead text-muted">Order by:
-                <form method="post" action="{{ path('app_show_tasks',{listId: list.id}) }}" >
+                <form method="get" action="{{ path('app_show_tasks',{listId: list.id}) }}" >
+                    <p>
+                        <div class="d-inline-flex gap-2 justify-content-center">
+                            <select name="orderBy" required class=" dropdown-menu position-static d-grid gap-1 p-2 rounded mx-0 shadow w-220px">
+                                <option {% if orderBy == 'task' %}selected{% endif %} class="dropdown-item rounded-2" value="task">Name</option>
+                                <option {% if orderBy == 'deadline' %}selected{% endif %} class="dropdown-item rounded-2" value="deadline">Deadline</option>
+                                <option {% if orderBy == 'status' %}selected{% endif %} class="dropdown-item rounded-2" value="status">Status</option>
+                                <option {% if orderBy == 'priority' %}selected{% endif %} class="dropdown-item rounded-2" value="priority">Priority</option>
+                            </select>
+                            <select name="orderDirection" required class=" dropdown-menu position-static d-grid gap-1 p-2 rounded mx-0 shadow w-220px">
+                                <option {% if orderDirection == 'ASC' %}selected{% endif %} class="dropdown-item rounded-2" value="ASC">Ascending</option>
+                                <option {% if orderDirection == 'DESC' %}selected{% endif %} class="dropdown-item rounded-2" value="DESC">Descending</option>
+                            </select>
+                        </div>
+                    </p>
                     <div class="d-inline-flex gap-2 justify-content-center">
-                        <select name="orderBy" required class=" dropdown-menu position-static d-grid gap-1 p-2 rounded mx-0 shadow w-220px">
-                            <option {% if orderBy == 'task' %}selected{% endif %} class="dropdown-item rounded-2" value="task">Name</option>
-                            <option {% if orderBy == 'deadline' %}selected{% endif %} class="dropdown-item rounded-2" value="deadline">Deadline</option>
-                            <option {% if orderBy == 'status' %}selected{% endif %} class="dropdown-item rounded-2" value="status">Status</option>
-                            <option {% if orderBy == 'priority' %}selected{% endif %} class="dropdown-item rounded-2" value="priority">Priority</option>
-                        </select>
                         <input name="searchTerm"
                                type="text"
                                class="position-static d-grid gap-1  rounded"
