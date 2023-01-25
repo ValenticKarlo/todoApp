@@ -11,23 +11,25 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-class DashboardController extends AbstractController
+class DashboardController extends TodoAppController
 {
     #[Route('/dashboard', name: 'app_dashboard')]
-    public function dashboard(TodoListRepository $listRepository, UserInterface $user): Response
+    public function dashboard(TodoListRepository $listRepository, Request $request): Response
     {
-        $searchTerm = !empty($_POST['searchTerm']) ? $_POST['searchTerm'] : null;
-        $orderBy = !empty($_POST['orderBy']) ? $_POST['orderBy'] : 'name';
         $user = $this->getUser();
-        if (is_null($user))
+        $orderBy = $request->get('orderBy') ? $request->get('orderBy') : 'name';
+        $orderDirection = $request->get('orderDirection') ? $request->get('orderDirection') : 'ASC';
+        $searchTerm = $request->get('searchTerm');
+        if ($user === null)
         {
             throw $this->createNotFoundException('No user logged in.');
         }
-        $lists = $listRepository->orderBySelectedValue($orderBy, $user, $searchTerm);
+        $lists = $listRepository->orderAndSearchByParameters($user->getId(), $orderBy,  $orderDirection,  $searchTerm);
 
         return $this->render('todoApp/dashboard.html.twig',[
             'lists'=>$lists,
             'orderBy'=>$orderBy,
+            'orderDirection'=>$orderDirection,
             'searchTerm'=>$searchTerm
         ]);
     }

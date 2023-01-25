@@ -21,11 +21,11 @@ class TaskController extends TodoAppController
         $orderDirection = $request->get('orderDirection') ? $request->get('orderDirection') : 'ASC' ;
         $searchTerm = $request->get('searchTerm');
         $list = $listRepository->findOneBy(['id'=>$listId]);
-        if( $listId === null && !($list->getUser() === $user) )
+        if( $listId === null || !($list->getUser() === $user) )
         {
-            throw $this->createNotFoundException('No list of tasks wit id: '. $listId);
+            throw $this->createNotFoundException('List with Id: '. $listId.' not found or is not owned by User');
         }
-        $tasks = $taskRepository->orderAndSearchByParameters($orderBy, $listId, $orderDirection, $searchTerm);
+        $tasks = $taskRepository->orderAndSearchByParameters( $listId, $orderBy, $orderDirection, $searchTerm);
         return $this->render('todoApp/showTasks.html.twig',[
             'tasks'=>$tasks,
             'list'=>$list,

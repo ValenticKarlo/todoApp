@@ -10,20 +10,25 @@
             <div class="col-lg-6 col-md-8 mx-auto">
                 <h1 class="fw-light">Lists:</h1>
                 <p class="lead text-muted">Total number of lists: {{ lists|length }}</p>
-                <p>
-                <form method="post" action="{{ path('app_dashboard') }}" >
-                    <div class="d-inline-flex gap-2 justify-content-center">
-                        <select name="orderBy" required class=" dropdown-menu position-static d-grid gap-1 p-2 rounded mx-0 shadow w-220px">
-                            <option {% if orderBy == 'name' %}selected{% endif %} class="dropdown-item rounded-2" value="name">Name</option>
-                            <option {% if orderBy == 'createdAt' %}selected{% endif %} class="dropdown-item rounded-2" value="createdAt">Date</option>
-                        </select>
-                        <input name="searchTerm"
-                               type="text"
-                               class="position-static d-grid gap-1  rounded"
-                               placeholder="{% if searchTerm != null %}{{ searchTerm }}{% else %}Search Lists{% endif %}">
-                        <input type="submit" class=" btn btn-sm btn-secondary position-static d-grid gap-1  rounded" value="Submit">
-                    </div>
-                </form>
+                    <form method="get" action="{{ path('app_dashboard') }}" >
+                        <div class="d-inline-flex gap-2 justify-content-center">
+                            <select name="orderBy" required class=" dropdown-menu position-static d-grid gap-1 p-2 rounded mx-0 shadow w-220px">
+                                <option {% if orderBy == 'name' %}selected{% endif %} class="dropdown-item rounded-2" value="name">Name</option>
+                                <option {% if orderBy == 'createdAt' %}selected{% endif %} class="dropdown-item rounded-2" value="createdAt">Date</option>
+                            </select>
+                            <select name="orderDirection" required class=" dropdown-menu position-static d-grid gap-1 p-2 rounded mx-0 shadow w-220px">
+                                <option {% if orderDirection == 'ASC' %}selected{% endif %} class="dropdown-item rounded-2" value="ASC">Ascending</option>
+                                <option {% if orderDirection == 'DESC' %}selected{% endif %} class="dropdown-item rounded-2" value="DESC">Descending</option>
+                            </select>
+                        </div>
+                        <div class="d-inline-flex gap-2 justify-content-center">
+                            <input name="searchTerm"
+                                   type="text"
+                                   class="position-static d-grid gap-1  rounded"
+                                   placeholder="{% if searchTerm != null %}{{ searchTerm }}{% else %}Search Lists{% endif %}">
+                            <input type="submit" class=" btn btn-sm btn-secondary position-static d-grid gap-1  rounded" value="Submit">
+                        </div>
+                    </form>
                 </p>
             </div>
         </div>
