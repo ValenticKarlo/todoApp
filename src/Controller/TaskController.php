@@ -39,17 +39,17 @@ class TaskController extends TodoAppController
     public function editTask($listId, $taskId, TaskRepository $taskRepository, Request $request, TodoListRepository $listRepository ): Response
     {
         $user = $this->getUser();
-        $lists = $listRepository->findBy(['user'=>$user]);
-        if ( !$lists || $user === null)
+        $list = $listRepository->findBy(['id'=>$listId]);
+        if ( !$list || $user === null)
         {
             throw $this->createNotFoundException('No user logged in, or no lists connected to the user.');
         }
         $task = $taskRepository->findOneBy(['id'=>$taskId]);
-        $form = $this->createForm(TaskType::class, $task, ['listRepo'=>$lists]);
+        $form = $this->createForm(TaskType::class, $task);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid())
         {
-            $taskRepository->update($task, true);
+            $taskRepository->save($task, true);
             return $this->redirectToRoute('app_show_tasks', ['listId'=>$listId]);
         }
         return $this->render('forms/createTask.html.twig', [
@@ -57,20 +57,21 @@ class TaskController extends TodoAppController
         ]);
     }
 
-    #[Route('/dashboard/create_task', name: 'app_task_create')]
-    public function createTask(Request $request, TaskRepository $taskRepository, TodoListRepository $listRepository): Response
+    #[Route('/dashboard/create_task/{listId<\d+>}', name: 'app_task_create')]
+    public function createTask($listId, Request $request, TaskRepository $taskRepository, TodoListRepository $listRepository): Response
     {
         $user = $this->getUser();
-        $lists = $listRepository->findBy(['user'=>$user]);
-        if (!$user || !$lists)
+        $list = $listRepository->findOneBy(['id'=>$listId]);
+        if (!$user || !$list)
         {
             throw $this->createNotFoundException('No user logged in, or no lists connected to the user.');
         }
         $task = new Task();
-        $form = $this->createForm(TaskType::class, $task, ['listRepo'=>$lists]);
+        $form = $this->createForm(TaskType::class, $task);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid())
         {
+            $task->setTodoList($list);
             $taskRepository->save($task, true);
             return $this->redirectToRoute('app_dashboard');
         }
@@ -104,7 +105,8 @@ class TaskController extends TodoAppController
         {
             throw $this->createNotFoundException('No task with id: '. $taskId . 'or task not owned by user.');
         }
-        $taskRepository->updateStatus($task, true);
+        $taskRepository->updateStatus($task->getId());
+        $listRepository->updateCount($listId);
         return $this->redirectToRoute('app_show_tasks',['listId'=>$listId]);
     }
 }

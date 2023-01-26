@@ -48,11 +48,6 @@ class TaskType extends AbstractType
                     'Task completed'=>true
                 ],
             ])
-            ->add('todoList', EntityType::class, [
-               'class'=> TodoList::class,
-                'choices'=>$options['listRepo'],
-                'choice_label'=> 'name'
-            ])
         ;
     }
 
@@ -60,8 +55,6 @@ class TaskType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Task::class,
-            'listRepo' => array()
         ]);
-        $resolver->setAllowedTypes('listRepo', ['array', 'null']);
     }
 }

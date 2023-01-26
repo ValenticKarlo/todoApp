@@ -38,22 +38,16 @@ class TaskRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
-    public function update(Task $entity, bool $flush = false): void
-    {
-        $this->getEntityManager()->persist($entity);
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
-    }
 
-    public function updateStatus(Task $entity, bool $flush = false): void
+    public function updateStatus(int $id): void
     {
-        $entity->setStatus(true);
-
-        if($flush)
-        {
-            $this->getEntityManager()->flush();
-        }
+        $qb = $this->createQueryBuilder('task');
+        $qb ->update('App:Task', 'task')
+            ->set('task.status', true)
+            ->where('task.id = :task')
+            ->setParameter('task', $id)
+            ->getQuery()
+            ->execute();
     }
 
     public function orderAndSearchByParameters( int $listId, string $orderBy, string $direction, $search): array
@@ -75,6 +69,16 @@ class TaskRepository extends ServiceEntityRepository
                 ->setParameter('searchTerm', '%'.strtolower($search).'%');
         }
         return $qb->getQuery()->getResult();
+    }
+
+    public function findCountOfCompletedTasksForList($list )
+    {
+        $qb = $this->createQueryBuilder('tasks');
+        $qb->andWhere('tasks.todoList = :list')
+            ->setParameter('list', $list)
+            ->andWhere('tasks.status = :val')
+            ->setParameter('val', true);
+        return count($qb->getQuery()->getResult());
     }
 
 //    /**

@@ -3,6 +3,8 @@
 namespace App\EventListener;
 
 use App\Entity\Task;
+use App\Entity\TodoList;
+use App\Repository\TaskRepository;
 use Doctrine\Bundle\DoctrineBundle\EventSubscriber\EventSubscriberInterface;
 use Doctrine\ORM\Events;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
@@ -42,29 +44,12 @@ class DatabaseActivitySubscriber implements EventSubscriberInterface
     {
         $entity = $args->getObject();
 
-        // if this subscriber only applies to certain entity types,
-        // add some code to check the entity type as early as possible
-
-
-        // ... get the entity information and log it somehow
         $em = $args->getObjectManager();
-        $counter = 0;
-
-        if ($entity instanceof Task && $entity->getId() !== null)
+        if ($entity instanceof Task )
         {
-
-            $todoList = $entity->getTodoList();
-            $tasks = $todoList->getTasks();
-            foreach ($tasks as $task){
-                if($task->isStatus()){
-                    $counter ++;
-                }
-            }
-
-            $todoList->setCompletedTasks($counter);
-            $todoList->setTotalTasks();
-            $em->flush();
-
+            $list = $entity->getTodoList();
+            $listRepo = $em->getRepository(TodoList::class);
+            $listRepo->updateCount($list->getId());
         }
     }
 }

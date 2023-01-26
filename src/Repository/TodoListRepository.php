@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\TodoList;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Internal\Hydration\HydrationException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -35,6 +36,37 @@ class TodoListRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    public function updateCount(int $listId): void
+    {
+        $em = $this->getEntityManager();
+        $sqb1 = $em->createQueryBuilder()
+            ->from('App:Task', 'tasks')
+            ->select('count(tasks)')
+            ->andWhere('tasks.todoList = :list')
+            ->setParameter('list', $listId)
+            ->andWhere('tasks.status = :val')
+            ->setParameter('val', true)
+            ->getQuery()->getSingleScalarResult();
+
+        $sqb2= $em->createQueryBuilder()
+            ->from('App:Task', 'tasks')
+            ->select('count(tasks)')
+            ->andWhere('tasks.todoList = :list')
+            ->setParameter('list', $listId)
+            ->getQuery()->getSingleScalarResult();
+
+        $qb = $this->createQueryBuilder('list');
+        $qb->update('App:TodoList', 'list')
+            ->set('list.completedTasks', ':val')
+            ->set('list.totalTasks', ':val2')
+            ->andWhere('list.id = :listId')
+            ->setParameter('val', $sqb1)
+            ->setParameter('val2', $sqb2)
+            ->setParameter('listId', $listId)
+            ->getQuery()
+            ->execute();
     }
 
     public function orderAndSearchByParameters(int $userId, string $orderBy, string $direction, ?string $search): array
