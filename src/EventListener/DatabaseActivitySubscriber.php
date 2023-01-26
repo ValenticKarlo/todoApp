@@ -3,7 +3,6 @@
 namespace App\EventListener;
 
 use App\Entity\Task;
-use App\Repository\TodoListRepository;
 use Doctrine\Bundle\DoctrineBundle\EventSubscriber\EventSubscriberInterface;
 use Doctrine\ORM\Events;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
@@ -50,8 +49,10 @@ class DatabaseActivitySubscriber implements EventSubscriberInterface
         // ... get the entity information and log it somehow
         $em = $args->getObjectManager();
         $counter = 0;
-        if ($entity instanceof Task)
+
+        if ($entity instanceof Task && $entity->getId() !== null)
         {
+
             $todoList = $entity->getTodoList();
             $tasks = $todoList->getTasks();
             foreach ($tasks as $task){

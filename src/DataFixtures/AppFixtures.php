@@ -14,14 +14,14 @@ class AppFixtures extends Fixture
     {
 
         UserFactory::new()->createMany(10);
-        TodoListFactory::new()->createMany(20, function (){
+        TodoListFactory::new()->createMany(40, function (){
             return [
              'user' => UserFactory::random(),
             ];
         });
 
 
-        TaskFactory::new()->createMany(20, function (){
+        TaskFactory::new()->createMany(80, function (){
               return [
                   'todoList'=>TodoListFactory::random(),
               ];
