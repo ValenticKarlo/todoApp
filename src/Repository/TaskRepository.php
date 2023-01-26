@@ -38,11 +38,18 @@ class TaskRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+    public function update(Task $entity, bool $flush = false): void
+    {
+        $this->getEntityManager()->persist($entity);
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
 
-    public function completeTask(Task $entity, bool $flush = false): void
+    public function updateStatus(Task $entity, bool $flush = false): void
     {
         $entity->setStatus(true);
-        $this->getEntityManager()->persist($entity);
+
         if($flush)
         {
             $this->getEntityManager()->flush();

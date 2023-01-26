@@ -3,6 +3,7 @@
 namespace App\EventListener;
 
 use App\Entity\Task;
+use App\Repository\TodoListRepository;
 use Doctrine\Bundle\DoctrineBundle\EventSubscriber\EventSubscriberInterface;
 use Doctrine\ORM\Events;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
@@ -61,8 +62,6 @@ class DatabaseActivitySubscriber implements EventSubscriberInterface
 
             $todoList->setCompletedTasks($counter);
             $todoList->setTotalTasks();
-
-            $em->persist($todoList);
             $em->flush();
 
         }

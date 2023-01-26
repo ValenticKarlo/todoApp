@@ -24,7 +24,6 @@ class TodoListRepository extends ServiceEntityRepository
     public function save(TodoList $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
-
         if ($flush) {
             $this->getEntityManager()->flush();
         }
@@ -33,7 +32,6 @@ class TodoListRepository extends ServiceEntityRepository
     public function remove(TodoList $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
-
         if ($flush) {
             $this->getEntityManager()->flush();
         }
