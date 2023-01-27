@@ -22,11 +22,8 @@ class TodoAppController extends AbstractController
 
         return $this->render('todoApp/homepage.html.twig');
     }
-    public function securityCheck(?TodoList $list, ?User $user):void
+    public function securityCheck(?TodoList $list):void
     {
-        if( !($list->getUser() === $user) )
-        {
-            throw $this->createNotFoundException('List not found or is not owned by User');
-        }
+        if( !$list ){throw $this->createNotFoundException('List not found');}
     }
 }

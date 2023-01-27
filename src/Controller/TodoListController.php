@@ -16,8 +16,8 @@ class TodoListController extends TodoAppController
     public function deleteList($listId, TodoListRepository $listRepository): Response
     {
         $user = $this->getUser();
-        $list = $listRepository->findOneBy(['id'=>$listId]);
-        $this->securityCheck($list, $user);
+        $list = $listRepository->findOneBy(['id'=>$listId, 'user'=>$user]);
+        $this->securityCheck($list);
         $listRepository->remove($list, true);
         return $this->redirectToRoute('app_dashboard');
     }

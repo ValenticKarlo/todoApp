@@ -24,8 +24,8 @@ class TaskController extends TodoAppController
     public function showTasks( $listId, TaskRepository $taskRepository, TodoListRepository $listRepository, Request $request):Response
     {
         $user = $this->getUser();
-        $list = $listRepository->findOneBy(['id'=>$listId]);
-        $this->securityCheck($list,$user);
+        $list = $listRepository->findOneBy(['id'=>$listId, 'user'=>$user]);
+        $this->securityCheck($list);
         $orderBy = $request->get('orderBy') ? $request->get('orderBy') : 'task' ;
         $orderDirection = $request->get('orderDirection') ? $request->get('orderDirection') : 'ASC' ;
         $searchTerm = $request->get('searchTerm');
@@ -43,8 +43,8 @@ class TaskController extends TodoAppController
     public function createTask($listId, Request $request, TaskRepository $taskRepository, TodoListRepository $listRepository): Response
     {
         $user = $this->getUser();
-        $list = $listRepository->findOneBy(['id'=>$listId]);
-        $this->securityCheck($list,$user);
+        $list = $listRepository->findOneBy(['id'=>$listId, 'user'=>$user]);
+        $this->securityCheck($list);
         $task = new Task();
         $form = $this->createForm(TaskType::class, $task);
         $form->handleRequest($request);
@@ -63,8 +63,8 @@ class TaskController extends TodoAppController
     public function editTask($listId, $taskId, TaskRepository $taskRepository, Request $request, TodoListRepository $listRepository ): Response
     {
         $user = $this->getUser();
-        $list = $listRepository->findOneBy(['id'=>$listId]);
-        $this->securityCheck($list, $user);
+        $list = $listRepository->findOneBy(['id'=>$listId, 'user'=>$user]);
+        $this->securityCheck($list);
         $task = $taskRepository->findOneBy(['id'=>$taskId]);
         $this->checkIfTaskExist($task);
         $form = $this->createForm(TaskType::class, $task);
@@ -83,8 +83,8 @@ class TaskController extends TodoAppController
     public function deleteTask($taskId, $listId, TaskRepository $taskRepository, TodoListRepository $listRepository ):Response
     {
         $user = $this->getUser();
-        $list = $listRepository->findOneBy(['id'=>$listId]);
-        $this->securityCheck($list,$user);
+        $list = $listRepository->findOneBy(['id'=>$listId, 'user'=>$user]);
+        $this->securityCheck($list);
         $task = $taskRepository->findOneBy(['id'=>$taskId]);
         $this->checkIfTaskExist($task);
         $taskRepository->remove($task, true);
@@ -95,8 +95,8 @@ class TaskController extends TodoAppController
     public function completeTask($taskId, $listId, TaskRepository $taskRepository, TodoListRepository $listRepository): Response
     {
         $user = $this->getUser();
-        $list = $listRepository->findOneBy(['id'=>$listId]);
-        $this->securityCheck($list,$user);
+        $list = $listRepository->findOneBy(['id'=>$listId, 'user'=>$user]);
+        $this->securityCheck($list);
         $task = $taskRepository->findOneBy(['id'=>$taskId]);
         $this->checkIfTaskExist($task);
         $taskRepository->updateStatus($task->getId());
