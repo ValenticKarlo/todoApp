@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\TodoList;
 use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,5 +22,11 @@ class TodoAppController extends AbstractController
 
         return $this->render('todoApp/homepage.html.twig');
     }
-
+    public function securityCheck(?TodoList $list, ?User $user):void
+    {
+        if( !($list->getUser() === $user) )
+        {
+            throw $this->createNotFoundException('List not found or is not owned by User');
+        }
+    }
 }

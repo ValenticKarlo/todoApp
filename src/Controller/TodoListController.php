@@ -8,6 +8,7 @@ use App\Repository\TodoListRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class TodoListController extends TodoAppController
 {
@@ -16,15 +17,13 @@ class TodoListController extends TodoAppController
     {
         $user = $this->getUser();
         $list = $listRepository->findOneBy(['id'=>$listId]);
-        if($listId === null || $list->getUser() !== $user)
-        {
-            throw $this->createNotFoundException('No list with Id: '.$listId . ', or list not owned by user.');
-        }
+        $this->securityCheck($list, $user);
         $listRepository->remove($list, true);
         return $this->redirectToRoute('app_dashboard');
     }
 
     #[Route('/dashboard/create-todolist', name: 'app_create_todoList')]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function createTodoList(Request $request, TodoListRepository $listRepository): Response
     {
         $todoList = new TodoList();
