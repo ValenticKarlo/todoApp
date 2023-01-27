@@ -6,6 +6,8 @@ use App\Repository\TodoListRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ORM\Entity(repositoryClass: TodoListRepository::class)]
 class TodoList
@@ -16,12 +18,16 @@ class TodoList
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Type('string')]
     private ?string $name = null;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\Type('integer')]
     private ?int $totalTasks = 0;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\Type('integer')]
     private ?int $completedTasks = 0;
 
     #[ORM\OneToMany(mappedBy: 'todoList', targetEntity: Task::class, fetch: 'EXTRA_LAZY', orphanRemoval: true, )]

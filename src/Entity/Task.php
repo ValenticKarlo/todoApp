@@ -17,15 +17,19 @@ class Task
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
+    #[Assert\Type('string')]
+    #[Assert\Length(min: 2)]
     private ?string $task = null;
 
     #[ORM\Column]
+    #[Assert\Choice([1,2,3])]
     private ?int $priority = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $deadline = null;
 
     #[ORM\Column]
+    #[Assert\Type('boolean')]
     private ?bool $status = null;
 
     #[ORM\ManyToOne(inversedBy: 'tasks')]

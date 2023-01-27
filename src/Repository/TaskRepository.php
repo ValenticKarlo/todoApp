@@ -71,16 +71,6 @@ class TaskRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function findCountOfCompletedTasksForList($list )
-    {
-        $qb = $this->createQueryBuilder('tasks');
-        $qb->andWhere('tasks.todoList = :list')
-            ->setParameter('list', $list)
-            ->andWhere('tasks.status = :val')
-            ->setParameter('val', true);
-        return count($qb->getQuery()->getResult());
-    }
-
 //    /**
 //     * @return Task[] Returns an array of Task objects
 //     */
