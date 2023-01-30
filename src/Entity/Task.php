@@ -18,7 +18,7 @@ class Task
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
     #[Assert\Type('string')]
-    #[Assert\Length(min: 2)]
+    #[Assert\Length(min: 2, max:200)]
     private ?string $task = null;
 
     #[ORM\Column]
